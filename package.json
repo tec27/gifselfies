@@ -1,0 +1,33 @@
+{
+  "name": "gifselfies",
+  "version": "0.0.0",
+  "description": "Selfies. GIF selfies. Take GIF selfies and then share them with everyone!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tec27/gifselfies"
+  },
+  "keywords": [
+    "gif",
+    "selfies"
+  ],
+  "author": "Travis Collins <travis@tec27.com> (http://tec27.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tec27/gifselfies/issues"
+  },
+  "homepage": "https://github.com/tec27/gifselfies",
+  "dependencies": {
+    "express": "~4.1.1",
+    "jade": "~1.3.1",
+    "errorhandler": "~1.0.1",
+    "serve-static": "~1.1.0",
+    "browserify-middleware": "~2.6.0",
+    "browserify-ngmin": "~0.1.0",
+    "angular": "~1.2.16"
+  }
+}

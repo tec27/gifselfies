@@ -28,6 +28,7 @@
     "serve-static": "~1.1.0",
     "browserify-middleware": "~2.6.0",
     "browserify-ngmin": "~0.1.0",
-    "angular": "~1.2.16"
+    "angular": "~1.2.16",
+    "Animated_GIF": "git://github.com/sole/Animated_GIF#8414bca77f59328443c85e1918806bbca1cf2bd4"
   }
 }

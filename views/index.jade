@@ -6,6 +6,9 @@ html(ng-app='gifselfies', lang='en')
     link(type='text/css', rel='stylesheet', href='/style.css')
   body()
     div(ng-hide='appInitialized') - LOADING -
-    .container(ng-show='appInitialized', class='ng-hide')
-      p Hi.
+    .container(ng-show='appInitialized && !appIncompatible', class='ng-hide')
+      .selfie-taker(ng-controller='SelfieTakerCtrl')
+        video(gs-webcam)
+    .incompatible(ng-show='appIncompatible', class='ng-hide')
+      p Plz upgrade browser, thx.
     script(type='text/javascript', src='/client.js')

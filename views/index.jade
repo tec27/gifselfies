@@ -1,8 +1,11 @@
 doctype html
-html
+html(ng-app='gifselfies', lang='en')
   head
+    meta(charset='utf-8')
     title gifselfi.es
     link(type='text/css', rel='stylesheet', href='/style.css')
-  body
-    p Hello world.
+  body()
+    div(ng-hide='appInitialized') - LOADING -
+    .container(ng-show='appInitialized', class='ng-hide')
+      p Hi.
     script(type='text/javascript', src='/client.js')

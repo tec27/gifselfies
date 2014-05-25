@@ -8,7 +8,9 @@ html(ng-app='gifselfies', lang='en')
     div(ng-hide='appInitialized') - LOADING -
     .container(ng-show='appInitialized && !appIncompatible', class='ng-hide')
       .selfie-taker(ng-controller='SelfieTakerCtrl')
-        video(gs-webcam)
+        video(gs-webcam, ng-hide='webcamError')
+        .permission-error(ng-show='webcamError == "PermissionDeniedError"')
+          p Please allow this page to use your webcam, thx.
     .incompatible(ng-show='appIncompatible', class='ng-hide')
       p Plz upgrade browser, thx.
     script(type='text/javascript', src='/client.js')

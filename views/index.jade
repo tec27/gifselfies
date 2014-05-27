@@ -9,6 +9,7 @@ html(ng-app='gifselfies', lang='en')
     .container(ng-show='appInitialized && !appIncompatible', class='ng-hide')
       .selfie-taker(ng-controller='SelfieTakerCtrl')
         .ready(ng-show='webcamReady')
+          gs-progress(percent='progressPercent')
           video(gs-webcam, gs-config='webcamConfig', ng-hide='webcamError')
           button.capture-button(ng-click='capture(numFrames, frameDelay)') Capture
           .controls

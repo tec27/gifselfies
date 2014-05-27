@@ -1,7 +1,8 @@
 var angular = require('angular')
 
 var app = angular.module('gifselfies', [
-  require('./selfie-taker')
+  require('./selfie-taker'),
+  require('./progress')
 ])
 
 app.config(function($compileProvider) {

@@ -17,6 +17,7 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
   $scope.numFrames = 10
   $scope.frameDelay = 200
   $scope.playbackRate = 100
+  $scope.progressPercent = 0
 
   $scope.$on('gsWebcamError', function(scope, elem, err) {
     $scope.webcamError = err.name
@@ -28,7 +29,15 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
 
   $scope.capture = function(numFrames, frameDelay, playbackRate) {
     var date = new Date()
-    captureGif(videoElem[0], numFrames, frameDelay, playbackRate, function(image) {
+    $scope.progressPercent = 0
+    captureGif(videoElem[0], numFrames, frameDelay, playbackRate, onProgress, onComplete)
+
+    function onProgress(currentFrame) {
+      $scope.progressPercent = ((currentFrame + 1) / numFrames) * 100
+      $scope.$apply()
+    }
+
+    function onComplete(image) {
       var capture = {
         image: image,
         imageUrl: URL.createObjectURL(image),
@@ -44,8 +53,10 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
       if ($scope.captures.length > 20) {
         $scope.captures.length = 20
       }
+
+      $scope.progressPercent = 0
       $scope.$apply()
-    })
+    }
   }
 
   $scope.preview = function(capture) {
@@ -59,7 +70,7 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
   }
 })
 
-function captureGif(videoElem, numFrames, frameDelay, playbackRate, cb) {
+function captureGif(videoElem, numFrames, frameDelay, playbackRate, progressCb, completeCb) {
   var gifCreator = new AnimatedGif({ workerPath: 'worker.js' })
     , canvas = document.createElement('canvas')
     , context = canvas.getContext('2d')
@@ -69,7 +80,8 @@ function captureGif(videoElem, numFrames, frameDelay, playbackRate, cb) {
   canvas.width = videoElem.videoWidth
   canvas.height = videoElem.videoHeight
 
-  getFrame()
+  var frameNum = 0
+  setTimeout(getFrame, 0)
 
   function getFrame() {
     numFrames--
@@ -80,6 +92,9 @@ function captureGif(videoElem, numFrames, frameDelay, playbackRate, cb) {
     context.drawImage(videoElem, 0, 0)
     gifCreator.addFrameImageData(context.getImageData(0, 0, canvas.width, canvas.height))
 
+    progressCb(frameNum)
+    frameNum++
+
     if (!numFrames) {
       done()
     }
@@ -88,7 +103,7 @@ function captureGif(videoElem, numFrames, frameDelay, playbackRate, cb) {
   function done() {
     gifCreator.getBlobGIF(function(image) {
       gifCreator.destroy()
-      cb(image)
+      completeCb(image)
     })
   }
 }

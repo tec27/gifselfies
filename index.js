@@ -19,6 +19,9 @@ app.get('/', function(req, res) {
 var browserify = require('browserify-middleware')
 browserify.settings({ transform: [ 'browserify-ngmin' ] })
 app.get('/client.js', browserify(require.resolve('./client/index.js')))
+app.get('/worker.js', function(req, res) {
+  res.sendfile(require.resolve('Animated_GIF/dist/Animated_GIF.worker.min.js'))
+})
 
 var port = process.env.PORT || 3333
 app.listen(port)

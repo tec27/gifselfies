@@ -1,5 +1,5 @@
 var angular = require('angular')
-  , AnimatedGif = require('Animated_GIF/src/main')
+  , AnimatedGif = require('Animated_GIF/src/Animated_GIF.js')
 
 module.exports = 'gifselfies.selfie-taker'
 var mod = angular.module(module.exports, [])
@@ -19,9 +19,29 @@ mod.controller('SelfieTakerCtrl', function($scope) {
   })
 
   $scope.capture = function() {
-    // TODO(tec27): capture a gif
+    captureGif(videoElem[0], function(image) {
+      $scope.captureResult = image
+      $scope.$apply()
+    })
   }
 })
+
+function captureGif(videoElem, cb) {
+  var gifCreator = new AnimatedGif({ workerPath: 'worker.js' })
+    , canvas = document.createElement('canvas')
+    , context = canvas.getContext('2d')
+
+  gifCreator.setSize(videoElem.videoWidth, videoElem.videoHeight)
+  canvas.width = videoElem.videoWidth
+  canvas.height = videoElem.videoHeight
+
+  context.drawImage(videoElem, 0, 0)
+  gifCreator.addFrameImageData(context.getImageData(0, 0, canvas.width, canvas.height))
+  gifCreator.getBase64GIF(function(image) {
+    gifCreator.destroy()
+    cb(image)
+  })
+}
 
 var getUserMedia = navigator.getUserMedia ||
   navigator.webkitGetUserMedia ||
@@ -60,9 +80,14 @@ mod.directive('gsWebcam', function() {
         elem.src = url.createObjectURL(stream)
       }
 
+      elem.addEventListener('loadeddata', dataLoaded)
       elem.play()
-      scope.$emit('gsWebcamReady', element)
-      scope.$apply()
+
+      function dataLoaded() {
+        elem.removeEventListener('loadeddata', dataLoaded)
+        scope.$emit('gsWebcamReady', element)
+        scope.$apply()
+      }
     }
 
     function failure(err) {

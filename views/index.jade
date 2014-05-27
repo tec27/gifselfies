@@ -16,7 +16,10 @@ html(ng-app='gifselfies', lang='en')
           p Please allow this page to use your webcam, thx.
         ul.capture-list
           li(ng-repeat='capture in captures')
-            img(ng-src='{{ capture.image }}')
+            a(ng-click='preview(capture)')
+              img(ng-src='{{ capture.image }}')
+        .preview(ng-show='previewActive', ng-click='closePreview()')
+          img(ng-src='{{ previewCapture.image }}', ng-click='$event.stopPropagation()')
     .incompatible(ng-show='appIncompatible', class='ng-hide')
       p Plz upgrade browser, thx.
     script(type='text/javascript', src='/client.js')

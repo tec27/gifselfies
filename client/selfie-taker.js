@@ -32,6 +32,16 @@ mod.controller('SelfieTakerCtrl', function($scope) {
       $scope.$apply()
     })
   }
+
+  $scope.preview = function(capture) {
+    $scope.previewCapture = capture
+    $scope.previewActive = true
+  }
+
+  $scope.closePreview = function() {
+    $scope.previewActive = false
+    $scope.previewCapture = null
+  }
 })
 
 function captureGif(videoElem, cb) {

@@ -14,8 +14,9 @@ html(ng-app='gifselfies', lang='en')
         .permission-error(ng-show=
           'webcamError == "PermissionDeniedError" || webcamError == "PermissionDismissedError"')
           p Please allow this page to use your webcam, thx.
-        .capture-result(ng-show='!!captureResult')
-          img(ng-src='{{ captureResult }}')
+        ul.capture-list
+          li(ng-repeat='capture in captures')
+            img(ng-src='{{ capture.image }}')
     .incompatible(ng-show='appIncompatible', class='ng-hide')
       p Plz upgrade browser, thx.
     script(type='text/javascript', src='/client.js')

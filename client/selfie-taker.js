@@ -13,6 +13,7 @@ mod.controller('SelfieTakerCtrl', function($scope) {
     width: 640,
     height: 480
   }
+  $scope.captures = []
 
   $scope.$on('gsWebcamError', function(scope, elem, err) {
     $scope.webcamError = err.name
@@ -24,7 +25,10 @@ mod.controller('SelfieTakerCtrl', function($scope) {
 
   $scope.capture = function() {
     captureGif(videoElem[0], function(image) {
-      $scope.captureResult = image
+      $scope.captures.unshift({ image: image })
+      if ($scope.captures.length > 20) {
+        $scope.captures.length = 20
+      }
       $scope.$apply()
     })
   }
@@ -76,7 +80,6 @@ mod.directive('gsWebcam', function() {
     })
 
     function getCamera() {
-      console.dir(scope)
       var width = scope.config.width || 640
         , height = scope.config.height || 480
       getUserMedia({

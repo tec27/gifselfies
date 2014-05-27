@@ -4,7 +4,7 @@ var angular = require('angular')
 module.exports = 'gifselfies.selfie-taker'
 var mod = angular.module(module.exports, [])
 
-mod.controller('SelfieTakerCtrl', function($scope) {
+mod.controller('SelfieTakerCtrl', function($scope, $sce) {
   var videoElem
 
   $scope.webcamError = null
@@ -23,9 +23,20 @@ mod.controller('SelfieTakerCtrl', function($scope) {
     videoElem = elem
   })
 
-  $scope.capture = function() {
-    captureGif(videoElem[0], function(image) {
-      $scope.captures.unshift({ image: image })
+  $scope.capture = function(numFrames, frameDelay) {
+    var date = new Date()
+    captureGif(videoElem[0], numFrames, frameDelay, function(image) {
+      var capture = {
+        image: image,
+        imageUrl: URL.createObjectURL(image),
+        metadata: {
+          date: date,
+          numFrames: numFrames,
+          frameDelay: frameDelay
+        }
+      }
+
+      $scope.captures.unshift(capture)
       if ($scope.captures.length > 20) {
         $scope.captures.length = 20
       }
@@ -44,21 +55,38 @@ mod.controller('SelfieTakerCtrl', function($scope) {
   }
 })
 
-function captureGif(videoElem, cb) {
+function captureGif(videoElem, numFrames, frameDelay, cb) {
   var gifCreator = new AnimatedGif({ workerPath: 'worker.js' })
     , canvas = document.createElement('canvas')
     , context = canvas.getContext('2d')
 
   gifCreator.setSize(videoElem.videoWidth, videoElem.videoHeight)
+  gifCreator.setDelay(frameDelay / 1000)
   canvas.width = videoElem.videoWidth
   canvas.height = videoElem.videoHeight
 
-  context.drawImage(videoElem, 0, 0)
-  gifCreator.addFrameImageData(context.getImageData(0, 0, canvas.width, canvas.height))
-  gifCreator.getBase64GIF(function(image) {
-    gifCreator.destroy()
-    cb(image)
-  })
+  getFrame()
+
+  function getFrame() {
+    numFrames--
+    if (numFrames > 0) {
+      setTimeout(getFrame, frameDelay)
+    }
+
+    context.drawImage(videoElem, 0, 0)
+    gifCreator.addFrameImageData(context.getImageData(0, 0, canvas.width, canvas.height))
+
+    if (!numFrames) {
+      done()
+    }
+  }
+
+  function done() {
+    gifCreator.getBlobGIF(function(image) {
+      gifCreator.destroy()
+      cb(image)
+    })
+  }
 }
 
 var getUserMedia = navigator.getUserMedia ||

@@ -10,16 +10,16 @@ html(ng-app='gifselfies', lang='en')
       .selfie-taker(ng-controller='SelfieTakerCtrl')
         .ready(ng-show='webcamReady')
           video(gs-webcam, gs-config='webcamConfig', ng-hide='webcamError')
-          button.capture-button(ng-click='capture()') Capture
+          button.capture-button(ng-click='capture(10, 200)') Capture
         .permission-error(ng-show=
           'webcamError == "PermissionDeniedError" || webcamError == "PermissionDismissedError"')
           p Please allow this page to use your webcam, thx.
         ul.capture-list
           li(ng-repeat='capture in captures')
             a(ng-click='preview(capture)')
-              img(ng-src='{{ capture.image }}')
+              img(ng-src='{{ capture.imageUrl }}')
         .preview(ng-show='previewActive', ng-click='closePreview()')
-          img(ng-src='{{ previewCapture.image }}', ng-click='$event.stopPropagation()')
+          img(ng-src='{{ previewCapture.imageUrl }}', ng-click='$event.stopPropagation()')
     .incompatible(ng-show='appIncompatible', class='ng-hide')
       p Plz upgrade browser, thx.
     script(type='text/javascript', src='/client.js')

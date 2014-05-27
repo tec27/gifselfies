@@ -14,6 +14,9 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
     height: 480
   }
   $scope.captures = []
+  $scope.numFrames = 10
+  $scope.frameDelay = 200
+  $scope.playbackRate = 100
 
   $scope.$on('gsWebcamError', function(scope, elem, err) {
     $scope.webcamError = err.name
@@ -23,16 +26,17 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
     videoElem = elem
   })
 
-  $scope.capture = function(numFrames, frameDelay) {
+  $scope.capture = function(numFrames, frameDelay, playbackRate) {
     var date = new Date()
-    captureGif(videoElem[0], numFrames, frameDelay, function(image) {
+    captureGif(videoElem[0], numFrames, frameDelay, playbackRate, function(image) {
       var capture = {
         image: image,
         imageUrl: URL.createObjectURL(image),
         metadata: {
           date: date,
           numFrames: numFrames,
-          frameDelay: frameDelay
+          frameDelay: frameDelay,
+          playbackRate: playbackRate
         }
       }
 
@@ -55,13 +59,13 @@ mod.controller('SelfieTakerCtrl', function($scope, $sce) {
   }
 })
 
-function captureGif(videoElem, numFrames, frameDelay, cb) {
+function captureGif(videoElem, numFrames, frameDelay, playbackRate, cb) {
   var gifCreator = new AnimatedGif({ workerPath: 'worker.js' })
     , canvas = document.createElement('canvas')
     , context = canvas.getContext('2d')
 
   gifCreator.setSize(videoElem.videoWidth, videoElem.videoHeight)
-  gifCreator.setDelay(frameDelay / 1000)
+  gifCreator.setDelay(frameDelay / playbackRate)
   canvas.width = videoElem.videoWidth
   canvas.height = videoElem.videoHeight
 

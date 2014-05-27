@@ -72,3 +72,9 @@ video {
   margin: 0px auto;
   display: block;
 }
+
+.controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

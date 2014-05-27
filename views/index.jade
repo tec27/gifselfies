@@ -10,7 +10,18 @@ html(ng-app='gifselfies', lang='en')
       .selfie-taker(ng-controller='SelfieTakerCtrl')
         .ready(ng-show='webcamReady')
           video(gs-webcam, gs-config='webcamConfig', ng-hide='webcamError')
-          button.capture-button(ng-click='capture(10, 200)') Capture
+          button.capture-button(ng-click='capture(numFrames, frameDelay)') Capture
+          .controls
+            .field
+              label(for='numFrames') Number of frames
+              input(name='numFrames', type='number', min='1', max='100', ng-model='numFrames')
+            .field
+              label(for='frameDelay') Frame delay
+              input(name='frameDelay', type='number', min='34', max='5000', ng-model='frameDelay')
+            .field
+              label(for='playbackRate') Playback rate
+              input(name='playbackRate', type='number', min='0.1', max='1000',
+                ng-model='playbackRate')
         .permission-error(ng-show=
           'webcamError == "PermissionDeniedError" || webcamError == "PermissionDismissedError"')
           p Please allow this page to use your webcam, thx.

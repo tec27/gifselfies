@@ -6,6 +6,7 @@ body {
   background-color: #161616;
   color: #fff;
   margin: 0px;
+  margin-bottom: 250px;
 }
 
 video {
@@ -14,13 +15,19 @@ video {
 }
 
 .capture-button {
+  color: transparent;
+  background-color: #ff0000;
   display: block;
-  margin: 0px auto;
+  margin: 6px auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
 }
 
 .capture-list {
-  background-color: #000;
-  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.8);
   width: 100%;
   height: 240px;
   padding-left: 0px;
@@ -32,7 +39,7 @@ video {
   white-space: nowrap;
   list-style-type: none;
   list-style-position: inside;
-  position: absolute;
+  position: fixed;
   bottom: 0px;
 }
 
@@ -41,7 +48,7 @@ video {
 }
 
 .capture-list img {
-  opacity: 1.0;
+  background-color: #000000;
   width: 320px;
   height: 240px;
   margin-left: 4px;

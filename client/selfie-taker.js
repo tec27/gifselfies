@@ -9,6 +9,10 @@ mod.controller('SelfieTakerCtrl', function($scope) {
 
   $scope.webcamError = null
   $scope.webcamReady = false
+  $scope.webcamConfig = {
+    width: 640,
+    height: 480
+  }
 
   $scope.$on('gsWebcamError', function(scope, elem, err) {
     $scope.webcamError = err.name
@@ -60,20 +64,34 @@ mod.directive('gsWebcam', function() {
       return
     }
 
-    // TODO(tec27): make customizable through attributes
-    var width = 640
-      , height = 480
-    getUserMedia({
-      video: {
-        mandatory: {
-          minWidth: width,
-          minHeight: height
-        }
+    var cameraStream
+    scope.$watch('config', function() {
+      if (cameraStream) {
+        cameraStream.stop()
+        element[0].stop()
+        element[0].src = null
+        cameraStream = null
       }
-    }, success, failure)
+      getCamera()
+    })
+
+    function getCamera() {
+      console.dir(scope)
+      var width = scope.config.width || 640
+        , height = scope.config.height || 480
+      getUserMedia({
+        video: {
+          mandatory: {
+            minWidth: width,
+            minHeight: height
+          }
+        }
+      }, success, failure)
+    }
 
     function success(stream) {
       var elem = element[0]
+      cameraStream = stream
       if (elem.mozSrcObject) {
         elem.mozSrcObject = stream
       } else {
@@ -98,6 +116,9 @@ mod.directive('gsWebcam', function() {
 
   return {
     restrict: 'A',
-    link: link
+    link: link,
+    scope: {
+      config: '=gsConfig'
+    }
   }
 })

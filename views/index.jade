@@ -9,7 +9,7 @@ html(ng-app='gifselfies', lang='en')
     .container(ng-show='appInitialized && !appIncompatible', class='ng-hide')
       .selfie-taker(ng-controller='SelfieTakerCtrl')
         .ready(ng-show='webcamReady')
-          video(gs-webcam, ng-hide='webcamError')
+          video(gs-webcam, gs-config='webcamConfig', ng-hide='webcamError')
           button.capture-button(ng-click='capture()') Capture
         .permission-error(ng-show=
           'webcamError == "PermissionDeniedError" || webcamError == "PermissionDismissedError"')

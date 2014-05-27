@@ -5,13 +5,22 @@ module.exports = 'gifselfies.selfie-taker'
 var mod = angular.module(module.exports, [])
 
 mod.controller('SelfieTakerCtrl', function($scope) {
+  var videoElem
+
+  $scope.webcamError = null
+  $scope.webcamReady = false
+
   $scope.$on('gsWebcamError', function(scope, elem, err) {
     $scope.webcamError = err.name
   })
-
-  $scope.$on('gsWebcamReady', function(scope, elem, srcWidth, srcHeight) {
-    console.log('webcam is ready!')
+  $scope.$on('gsWebcamReady', function(scope, elem) {
+    $scope.webcamReady = true
+    videoElem = elem
   })
+
+  $scope.capture = function() {
+    // TODO(tec27): capture a gif
+  }
 })
 
 var getUserMedia = navigator.getUserMedia ||
@@ -52,7 +61,7 @@ mod.directive('gsWebcam', function() {
       }
 
       elem.play()
-      scope.$emit('gsWebcamReady', element, elem.videoWidth, elem.videoHeight)
+      scope.$emit('gsWebcamReady', element)
       scope.$apply()
     }
 
